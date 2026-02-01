@@ -1,205 +1,192 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Karishma, Be My Valentine ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
     <style>
         body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #ffe6f0, #ffd6e8);
             margin: 0;
-            padding: 60px 20px;
-            overflow: hidden;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-        h1 {
-            font-size: 42px;
-            color: #ff3366;
-            margin-bottom: 6px;
-        }
-        p {
-            font-size: 20px;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #ffd6e8, #ffe6f0);
             color: #444;
-            margin-top: 6px;
+            overflow: hidden;
         }
+
+        h1 { margin-top: 80px; font-size: 40px; color: #ff2e63; }
+        .love-text { font-size: 20px; margin-bottom: 10px; }
+
         .countdown {
-            display: inline-flex;
-            gap: 18px;
-            margin: 18px 0 28px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0 40px;
+            flex-wrap: wrap;
         }
+
         .time-box {
-            background: rgba(255,255,255,0.85);
-            padding: 12px 16px;
-            border-radius: 10px;
-            min-width: 80px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+            background: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            min-width: 90px;
         }
-        .time-box .num {
-            font-size: 28px;
-            color: #ff3366;
+
+        .time-box span {
+            display: block;
+            font-size: 24px;
             font-weight: 700;
+            color: #ff2e63;
         }
-        .time-box .label {
-            font-size: 12px;
-            color: #666;
-        }
+
+        .label { font-size: 14px; color: #777; }
+
         .btn {
-            padding: 15px 35px;
+            padding: 16px 40px;
             font-size: 22px;
             border: none;
-            border-radius: 12px;
+            border-radius: 40px;
             cursor: pointer;
-            margin: 20px;
-            transition: 0.2s;
-            position: relative;
+            margin: 15px;
+            transition: all 0.3s ease;
         }
+
         #yesBtn {
-            background-color: #ff4d6d;
+            background: linear-gradient(45deg, #ff4d6d, #ff758f);
             color: white;
-            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(255,77,109,0.4);
         }
+
+        #yesBtn:hover { transform: scale(1.1); }
+
         #noBtn {
-            background-color: #888;
+            background-color: #777;
             color: white;
             position: absolute;
-            left: calc(50% + 120px);
-            top: 58%;
         }
+
         .heart {
             position: fixed;
             top: -10px;
             color: #ff4d6d;
-            font-size: 20px;
+            font-size: 22px;
             animation: fall 5s linear infinite;
-            pointer-events: none;
         }
 
         @keyframes fall {
-            to {
-                transform: translateY(110vh);
-                opacity: 0;
-            }
+            to { transform: translateY(110vh); opacity: 0; }
         }
-        /* responsive */
-        @media (max-width: 600px) {
-            h1 { font-size: 28px; }
-            .time-box .num { font-size: 20px; }
-            #noBtn { left: calc(50% + 80px); top: 62%; }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
+
     <h1>Karishma, will you be my Valentine? ❤️</h1>
-    <p>I love you more than any blue sky ❤️</p>
-    <div class="countdown" aria-live="polite">
-        <div class="time-box">
-            <div class="num" id="days">--</div>
-            <div class="label">Days</div>
-        </div>
-        <div class="time-box">
-            <div class="num" id="hours">--</div>
-            <div class="label">Hours</div>
-        </div>
-        <div class="time-box">
-            <div class="num" id="minutes">--</div>
-            <div class="label">Minutes</div>
-        </div>
-        <div class="time-box">
-            <div class="num" id="seconds">--</div>
-            <div class="label">Seconds</div>
-        </div>
+    <div class="love-text">I love you more than any blue sky ❤️</div>
+    <div class="love-text">I promise unlimited hugs, food dates, and bad jokes 😌</div>
+
+    <div class="countdown">
+        <div class="time-box"><span id="days">0</span><div class="label">Days</div></div>
+        <div class="time-box"><span id="hours">0</span><div class="label">Hours</div></div>
+        <div class="time-box"><span id="minutes">0</span><div class="label">Minutes</div></div>
+        <div class="time-box"><span id="seconds">0</span><div class="label">Seconds</div></div>
     </div>
 
     <button class="btn" id="yesBtn" onclick="yesClicked()">YES 💖</button>
     <button class="btn" id="noBtn">NO 🙈</button>
 
-    <!-- Romantic Background Music -->
-    <audio autoplay loop>
-        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3">
-    </audio>
+    <!-- 🎵 Song plays after YES -->
+    <audio id="loveSong" src="raataan-lambiyan.mp3"></audio>
+
+    <canvas id="fireworks"></canvas>
 
     <script>
-        // Countdown to next Valentine's Day (Feb 14)
-        function getNextValentine() {
-            const now = new Date();
-            let year = now.getFullYear();
-            // February is month 1 (0-indexed)
-            let target = new Date(year, 1, 14, 0, 0, 0);
-            if (now > target) {
-                target = new Date(year + 1, 1, 14, 0, 0, 0);
-            }
-            return target;
-        }
+        const noBtn = document.getElementById("noBtn");
 
-        const daysEl = document.getElementById('days');
-        const hoursEl = document.getElementById('hours');
-        const minutesEl = document.getElementById('minutes');
-        const secondsEl = document.getElementById('seconds');
-
-        let valentine = getNextValentine();
-
-        function updateCountdown() {
-            const now = new Date();
-            const diff = valentine - now;
-            if (diff <= 0) {
-                daysEl.textContent = '0';
-                hoursEl.textContent = '00';
-                minutesEl.textContent = '00';
-                secondsEl.textContent = '00';
-                // show a message when it's Valentine
-                document.querySelector('.countdown').innerHTML = '<div style=\"font-size:22px;color:#ff3366;\">Happy Valentine\'s Day! 💘</div>'
-                startHearts();
-                return;
-            }
-            const seconds = Math.floor(diff / 1000) % 60;
-            const minutes = Math.floor(diff / (1000 * 60)) % 60;
-            const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-            daysEl.textContent = days;
-            hoursEl.textContent = String(hours).padStart(2, '0');
-            minutesEl.textContent = String(minutes).padStart(2, '0');
-            secondsEl.textContent = String(seconds).padStart(2, '0');
-        }
-
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-
-        const noBtn = document.getElementById('noBtn');
-
-        noBtn.addEventListener('mouseover', function() {
-            const btnRect = noBtn.getBoundingClientRect();
-            const x = Math.random() * (window.innerWidth - btnRect.width);
-            const y = Math.random() * (window.innerHeight - btnRect.height - 20) + 20;
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
+        noBtn.addEventListener("mouseover", function() {
+            noBtn.style.left = Math.random() * (window.innerWidth - 100) + "px";
+            noBtn.style.top = Math.random() * (window.innerHeight - 100) + "px";
         });
 
         function yesClicked() {
-            document.body.innerHTML = `
-                <h1 style=\"color:#ff3366\">YAY KARISHMA!!! 💕</h1>\n                <p style=\"font-size:24px;\">\n                    Best decision ever 😎<br>\n                    Our Valentine’s Day is officially booked 💘<br><br>\n                    I love you more than any blue sky ❤️<br><br>\n                    <strong>Forever yours,<br>Vikas 💞</strong>\n                </p>\n            `;
+            document.getElementById("loveSong").play();
+
+            document.body.innerHTML += `
+                <h1 style="color:#ff2e63">YAY KARISHMA!!! 💕</h1>
+                <p style="font-size:24px;">
+                    Best decision ever 😎<br>
+                    Our Valentine’s Day is officially booked 💘<br><br>
+                    I love you more than any blue sky ❤️<br><br>
+                    <strong>Forever yours,<br>Vikas 💞</strong>
+                </p>
+            `;
             startHearts();
+            startFireworks();
         }
 
         function startHearts() {
-            const interval = setInterval(() => {
-                const heart = document.createElement('div');
-                heart.classList.add('heart');
-                heart.innerHTML = '💖';
-                heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.fontSize = (Math.random() * 24 + 16) + 'px';
-                heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            setInterval(() => {
+                const heart = document.createElement("div");
+                heart.classList.add("heart");
+                heart.innerHTML = "💖";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
                 document.body.appendChild(heart);
-
-                setTimeout(() => heart.remove(), 6000);
-            }, 250);
-
-            // stop after a while to avoid infinite additions when not needed
-            setTimeout(() => clearInterval(interval), 30_000);
+                setTimeout(() => heart.remove(), 5000);
+            }, 300);
         }
+
+        function startFireworks() {
+            const canvas = document.getElementById("fireworks");
+            const ctx = canvas.getContext("2d");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            function random(min,max){return Math.random()*(max-min)+min;}
+
+            function firework(){
+                const x=random(100,canvas.width-100);
+                const y=random(50,canvas.height/2);
+                for(let i=0;i<50;i++){
+                    const angle=Math.random()*2*Math.PI;
+                    const speed=random(2,6);
+                    const vx=Math.cos(angle)*speed;
+                    const vy=Math.sin(angle)*speed;
+                    let life=60;
+                    const color=`hsl(${Math.random()*360},100%,60%)`;
+                    function draw(){
+                        if(life--<=0)return;
+                        ctx.fillStyle=color;
+                        ctx.fillRect(x+vx*(60-life),y+vy*(60-life),2,2);
+                        requestAnimationFrame(draw);
+                    }
+                    draw();
+                }
+            }
+            setInterval(firework,800);
+        }
+
+        const valentine=new Date(new Date().getFullYear(),1,14);
+
+        function updateCountdown(){
+            const now=new Date();
+            let diff=valentine-now;
+            if(diff<0){valentine.setFullYear(valentine.getFullYear()+1);diff=valentine-now;}
+            document.getElementById("days").textContent=Math.floor(diff/(1000*60*60*24));
+            document.getElementById("hours").textContent=Math.floor((diff/(1000*60*60))%24);
+            document.getElementById("minutes").textContent=Math.floor((diff/(1000*60))%60);
+            document.getElementById("seconds").textContent=Math.floor((diff/1000)%60);
+        }
+
+        setInterval(updateCountdown,1000);
+        updateCountdown();
     </script>
 
 </body>
