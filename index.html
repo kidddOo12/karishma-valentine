@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Karishma, Be My Valentine ❤️</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffe6f0, #ffd6e8);
+            margin: 0;
+            padding: 60px 20px;
+            overflow: hidden;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        h1 {
+            font-size: 42px;
+            color: #ff3366;
+            margin-bottom: 6px;
+        }
+        p {
+            font-size: 20px;
+            color: #444;
+            margin-top: 6px;
+        }
+        .countdown {
+            display: inline-flex;
+            gap: 18px;
+            margin: 18px 0 28px;
+        }
+        .time-box {
+            background: rgba(255,255,255,0.85);
+            padding: 12px 16px;
+            border-radius: 10px;
+            min-width: 80px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+        }
+        .time-box .num {
+            font-size: 28px;
+            color: #ff3366;
+            font-weight: 700;
+        }
+        .time-box .label {
+            font-size: 12px;
+            color: #666;
+        }
+        .btn {
+            padding: 15px 35px;
+            font-size: 22px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin: 20px;
+            transition: 0.2s;
+            position: relative;
+        }
+        #yesBtn {
+            background-color: #ff4d6d;
+            color: white;
+            transform: scale(1.05);
+        }
+        #noBtn {
+            background-color: #888;
+            color: white;
+            position: absolute;
+            left: calc(50% + 120px);
+            top: 58%;
+        }
+        .heart {
+            position: fixed;
+            top: -10px;
+            color: #ff4d6d;
+            font-size: 20px;
+            animation: fall 5s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh);
+                opacity: 0;
+            }
+        }
+        /* responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 28px; }
+            .time-box .num { font-size: 20px; }
+            #noBtn { left: calc(50% + 80px); top: 62%; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Karishma, will you be my Valentine? ❤️</h1>
+    <p>I love you more than any blue sky ❤️</p>
+    <div class="countdown" aria-live="polite">
+        <div class="time-box">
+            <div class="num" id="days">--</div>
+            <div class="label">Days</div>
+        </div>
+        <div class="time-box">
+            <div class="num" id="hours">--</div>
+            <div class="label">Hours</div>
+        </div>
+        <div class="time-box">
+            <div class="num" id="minutes">--</div>
+            <div class="label">Minutes</div>
+        </div>
+        <div class="time-box">
+            <div class="num" id="seconds">--</div>
+            <div class="label">Seconds</div>
+        </div>
+    </div>
+
+    <button class="btn" id="yesBtn" onclick="yesClicked()">YES 💖</button>
+    <button class="btn" id="noBtn">NO 🙈</button>
+
+    <!-- Romantic Background Music -->
+    <audio autoplay loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3">
+    </audio>
+
+    <script>
+        // Countdown to next Valentine's Day (Feb 14)
+        function getNextValentine() {
+            const now = new Date();
+            let year = now.getFullYear();
+            // February is month 1 (0-indexed)
+            let target = new Date(year, 1, 14, 0, 0, 0);
+            if (now > target) {
+                target = new Date(year + 1, 1, 14, 0, 0, 0);
+            }
+            return target;
+        }
+
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+
+        let valentine = getNextValentine();
+
+        function updateCountdown() {
+            const now = new Date();
+            const diff = valentine - now;
+            if (diff <= 0) {
+                daysEl.textContent = '0';
+                hoursEl.textContent = '00';
+                minutesEl.textContent = '00';
+                secondsEl.textContent = '00';
+                // show a message when it's Valentine
+                document.querySelector('.countdown').innerHTML = '<div style=\"font-size:22px;color:#ff3366;\">Happy Valentine\'s Day! 💘</div>'
+                startHearts();
+                return;
+            }
+            const seconds = Math.floor(diff / 1000) % 60;
+            const minutes = Math.floor(diff / (1000 * 60)) % 60;
+            const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+            daysEl.textContent = days;
+            hoursEl.textContent = String(hours).padStart(2, '0');
+            minutesEl.textContent = String(minutes).padStart(2, '0');
+            secondsEl.textContent = String(seconds).padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        const noBtn = document.getElementById('noBtn');
+
+        noBtn.addEventListener('mouseover', function() {
+            const btnRect = noBtn.getBoundingClientRect();
+            const x = Math.random() * (window.innerWidth - btnRect.width);
+            const y = Math.random() * (window.innerHeight - btnRect.height - 20) + 20;
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        });
+
+        function yesClicked() {
+            document.body.innerHTML = `
+                <h1 style=\"color:#ff3366\">YAY KARISHMA!!! 💕</h1>\n                <p style=\"font-size:24px;\">\n                    Best decision ever 😎<br>\n                    Our Valentine’s Day is officially booked 💘<br><br>\n                    I love you more than any blue sky ❤️<br><br>\n                    <strong>Forever yours,<br>Vikas 💞</strong>\n                </p>\n            `;
+            startHearts();
+        }
+
+        function startHearts() {
+            const interval = setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '💖';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.fontSize = (Math.random() * 24 + 16) + 'px';
+                heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                document.body.appendChild(heart);
+
+                setTimeout(() => heart.remove(), 6000);
+            }, 250);
+
+            // stop after a while to avoid infinite additions when not needed
+            setTimeout(() => clearInterval(interval), 30_000);
+        }
+    </script>
+
+</body>
+</html>
